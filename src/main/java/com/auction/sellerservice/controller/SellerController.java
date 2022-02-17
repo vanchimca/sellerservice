@@ -3,6 +3,8 @@ package com.auction.sellerservice.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +33,13 @@ public class SellerController {
 	}
 	
 	@PostMapping("/e-auction/api/v1/seller/add-product")
-	public ResponseEntity<String> saveProductDetails(@RequestBody ProductDetails productDetails){
-		
+	public ResponseEntity<String> saveProductDetails(@Valid @RequestBody ProductDetails productDetails) throws Exception{
+		if(sellerService.isValidDate(productDetails.getBidEndDate().toString())) {
 		sellerService.saveProductDetails(productDetails);
-		System.out.println("id -- "+productDetails.get_id());
 		return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
+		}else {
+			throw new Exception("Bid end date should be a future date");
+		}
 	}
 	
 	@GetMapping("/e-auction/api/v1/seller/product-details/{productId}")

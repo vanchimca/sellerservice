@@ -1,5 +1,8 @@
 package com.auction.sellerservice.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +43,9 @@ public class SellerServiceImpl implements SellerService{
 		List<ProductDetails> productDetails = repository.findAll();
 		return productDetails;
 	}
-
+	
+	public boolean isValidDate(String pDateString) throws ParseException {
+        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(pDateString);
+        return date.after(new Date());
+}
 }
