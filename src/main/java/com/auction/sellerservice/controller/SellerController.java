@@ -1,6 +1,8 @@
 package com.auction.sellerservice.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.auction.sellerservice.model.ProductDetails;
 import com.auction.sellerservice.service.SellerService;
@@ -50,9 +53,19 @@ public class SellerController {
 	}
 	
 	@DeleteMapping("/e-auction/api/v1/seller/delete-product/{productId}")
-	public ResponseEntity<String> deleteProduct(@PathVariable("productId") String productId)  
+	public ResponseEntity<String> deleteProduct(@PathVariable("productId") String productId)  throws Exception
 	{  
+		Map<String, String> uriVariables=new HashMap<>();
+		uriVariables.put("productId", productId);
+		//calling the currency exchange service
+		ResponseEntity<Integer> responseEntity = new RestTemplate().getForEntity("http://localhost:8091/e-auction/api/v1/buyer/getCount/{productId}", Integer.class, uriVariables);
+		Integer size =responseEntity.getBody();
+		
+		if(size > 0) {
+			throw new Exception("Product can not be deleted");
+		}else {		
 		sellerService.deleteProduct(productId);
-		return  ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");  
+		return  ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");
+		}  
 	}
 }
