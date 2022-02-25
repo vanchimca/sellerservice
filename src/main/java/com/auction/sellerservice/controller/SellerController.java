@@ -1,5 +1,6 @@
 package com.auction.sellerservice.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ import com.auction.sellerservice.service.SellerService;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class SellerController {
 	
 	@Autowired
@@ -37,12 +40,13 @@ public class SellerController {
 	
 	@PostMapping("/e-auction/api/v1/seller/add-product")
 	public ResponseEntity<String> saveProductDetails(@Valid @RequestBody ProductDetails productDetails) throws Exception{
-		if(sellerService.isValidDate(productDetails.getBidEndDate().toString())) {
+		
+		//if(sellerService.isValidDate(new SimpleDateFormat("dd-MM-yyyy").parse(productDetails.getBidEndDate().toString()).toString())) {
 		sellerService.saveProductDetails(productDetails);
 		return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
-		}else {
-			throw new Exception("Bid end date should be a future date");
-		}
+		/*
+		 * }else { throw new Exception("Bid end date should be a future date"); }
+		 */
 	}
 	
 	@GetMapping("/e-auction/api/v1/seller/product-details/{productId}")
@@ -62,7 +66,7 @@ public class SellerController {
 		Integer size =responseEntity.getBody();
 		
 		if(size > 0) {
-			throw new Exception("Product can not be deleted");
+			return  ResponseEntity.status(HttpStatus.OK).body("Product can not be deleted");
 		}else {		
 		sellerService.deleteProduct(productId);
 		return  ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");
