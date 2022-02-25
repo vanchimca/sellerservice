@@ -38,15 +38,18 @@ public class SellerController {
 		return  ResponseEntity.status(HttpStatus.OK).body(prodouctDetails);  
 	}
 	
-	@PostMapping("/e-auction/api/v1/seller/add-product")
+	@PostMapping("/e-auction/api/v1/seller/add-product",produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> saveProductDetails(@Valid @RequestBody ProductDetails productDetails) throws Exception{
 		
-		//if(sellerService.isValidDate(new SimpleDateFormat("dd-MM-yyyy").parse(productDetails.getBidEndDate().toString()).toString())) {
-		sellerService.saveProductDetails(productDetails);
-		return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
-		/*
-		 * }else { throw new Exception("Bid end date should be a future date"); }
-		 */
+		if(sellerService.isValidDate(productDetails.getBidEndDate())) {
+			
+			sellerService.saveProductDetails(productDetails);
+			return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
+		
+		  }else { 
+			  return  ResponseEntity.status(HttpStatus.OK).body("Bid End Date should be future date"); 
+			  }
+		 
 	}
 	
 	@GetMapping("/e-auction/api/v1/seller/product-details/{productId}")

@@ -1,6 +1,7 @@
 package com.auction.sellerservice.service;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,6 @@ public interface SellerService {
 	public Optional<ProductDetails> retrieveProductDetails(String productId);
 	public String deleteProduct(String productId);
 	public List<ProductDetails> retrieveAllProducts(); 
-	public boolean isValidDate(String pDateString) throws ParseException;
+	public boolean isValidDate(Date bidEndDate) throws ParseException;
 	
 }

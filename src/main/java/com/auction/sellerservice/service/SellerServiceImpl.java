@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +45,10 @@ public class SellerServiceImpl implements SellerService{
 		return productDetails;
 	}
 	
-	public boolean isValidDate(String pDateString) throws ParseException {
-        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(pDateString);
+	public boolean isValidDate(Date bidEndDate) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy",
+                Locale.ENGLISH);
+        Date date = sdf.parse(bidEndDate.toString());
         return date.after(new Date());
 }
 }
