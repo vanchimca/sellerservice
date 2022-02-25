@@ -38,7 +38,7 @@ public class SellerController {
 		return  ResponseEntity.status(HttpStatus.OK).body(prodouctDetails);  
 	}
 	
-	@PostMapping("/e-auction/api/v1/seller/add-product",produces=MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping("/e-auction/api/v1/seller/add-product")
 	public ResponseEntity<String> saveProductDetails(@Valid @RequestBody ProductDetails productDetails) throws Exception{
 		
 		if(sellerService.isValidDate(productDetails.getBidEndDate())) {
