@@ -1,6 +1,9 @@
 package com.auction.sellerservice.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,17 +65,29 @@ public class SellerController {
 	@DeleteMapping("/e-auction/api/v1/seller/delete-product/{productId}")
 	public ResponseEntity<String> deleteProduct(@PathVariable("productId") String productId)  throws Exception
 	{  
-		Map<String, String> uriVariables=new HashMap<>();
-		uriVariables.put("productId", productId);
-		//calling the currency exchange service
-		ResponseEntity<Integer> responseEntity = new RestTemplate().getForEntity("http://localhost:8091/e-auction/api/v1/buyer/getCount/{productId}", Integer.class, uriVariables);
-		Integer size =responseEntity.getBody();
-		
-		if(size > 0) {
-			return  ResponseEntity.status(HttpStatus.OK).body("Product can not be deleted");
-		}else {		
+		Optional<ProductDetails> productDetails = sellerService.retrieveProductDetails(productId);
+		List<Date> dateList = new ArrayList<Date>();
+		dateList.add(new Date());
+		productDetails.ifPresent(product -> {
+			dateList.set(0, product.getBidEndDate());		    
+		});
+		if(!sellerService.isValidDate(dateList.get(0))) {
+			return  ResponseEntity.status(HttpStatus.OK).body("Product can not be deleted after bid end date");
+		}else {
+			Map<String, String> uriVariables=new HashMap<>();
+			uriVariables.put("productId", productId);
+			//calling the currency exchange service
+			ResponseEntity<Integer> responseEntity = new RestTemplate().getForEntity("http://localhost:8091/e-auction/api/v1/buyer/getCount/{productId}", Integer.class, uriVariables);
+			Integer size =responseEntity.getBody();
+			if(size > 0) {
+			return  ResponseEntity.status(HttpStatus.OK).body("Product has bids, can not be deleted");
+			}else {
+			
 		sellerService.deleteProduct(productId);
 		return  ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");
 		}  
+		
+		}
 	}
+
 }
