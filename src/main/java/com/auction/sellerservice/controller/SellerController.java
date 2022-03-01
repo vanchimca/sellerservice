@@ -89,5 +89,20 @@ public class SellerController {
 		
 		}
 	}
+	
+	@GetMapping("/e-auction/api/v1/seller/bidEligible/{productId}")
+	public ResponseEntity<Boolean> isBidEligible(@PathVariable("productId") String productId)  throws Exception{
+		Optional<ProductDetails> productDetails = sellerService.retrieveProductDetails(productId);
+		List<Date> dateList = new ArrayList<Date>();
+		dateList.add(new Date());
+		productDetails.ifPresent(product -> {
+			dateList.set(0, product.getBidEndDate());		    
+		});
+		if(!sellerService.isValidDate(dateList.get(0))) {
+			return  ResponseEntity.status(HttpStatus.OK).body(false);
+		}else {
+			return  ResponseEntity.status(HttpStatus.OK).body(true);
+		}
+	}
 
 }
