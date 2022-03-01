@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,11 @@ public class SellerServiceImpl implements SellerService{
 	}
 	public List<ProductDetails> retrieveAllProducts(){
 		
-		List<ProductDetails> productDetails = repository.findAll();
-		return productDetails;
+		/*
+		 * List<ProductDetails> productDetails = repository.findAll(); return
+		 * productDetails;
+		 */
+		return repository.findAll().stream().collect(Collectors.toList());
 	}
 	
 	public boolean isValidDate(Date bidEndDate) throws ParseException {
