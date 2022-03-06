@@ -28,7 +28,7 @@ import com.auction.sellerservice.service.SellerService;
 
 
 @RestController
-@CrossOrigin(origins = {"http://eauction.s3-website-us-east-1.amazonaws.com/",  "http://ec2-3-88-0-13.compute-1.amazonaws.com:8091"})
+@CrossOrigin(origins = {"http://eauction.s3-website-us-east-1.amazonaws.com/",  "http://buyerservice.us-east-1.elasticbeanstalk.com/"})
 public class SellerController {
 	
 	@Autowired
@@ -77,7 +77,7 @@ public class SellerController {
 			Map<String, String> uriVariables=new HashMap<>();
 			uriVariables.put("productId", productId);
 			//calling the currency exchange service
-			ResponseEntity<Integer> responseEntity = new RestTemplate().getForEntity("http://ec2-3-88-0-13.compute-1.amazonaws.com:8091/e-auction/api/v1/buyer/getCount/{productId}", Integer.class, uriVariables);
+			ResponseEntity<Integer> responseEntity = new RestTemplate().getForEntity("http://buyerservice.us-east-1.elasticbeanstalk.com/e-auction/api/v1/buyer/getCount/{productId}", Integer.class, uriVariables);
 			Integer size =responseEntity.getBody();
 			if(size > 0) {
 			return  ResponseEntity.status(HttpStatus.OK).body("Product has bids, can not be deleted");
