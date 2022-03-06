@@ -28,7 +28,7 @@ import com.auction.sellerservice.service.SellerService;
 
 
 @RestController
-@CrossOrigin(origins = {"http://eauction.s3-website-us-east-1.amazonaws.com/",  "http://buyerservice.us-east-1.elasticbeanstalk.com/"})
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SellerController {
 	
 	@Autowired
