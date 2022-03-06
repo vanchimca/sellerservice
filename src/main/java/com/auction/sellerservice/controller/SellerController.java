@@ -28,7 +28,7 @@ import com.auction.sellerservice.service.SellerService;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200",  "http://localhost:8091"})
 public class SellerController {
 	
 	@Autowired
